@@ -1,18 +1,25 @@
-// const storeName = "Garted";
-// const storeDescription = {
-// 	budget: 10000,
-// 	employees:["anna", "piter", "john"],
-// 	products:{
-// 		"mobile": 1000,
-// 		"computer": 5000,
-// 	},
-// 	open: true
-// };
-// console.log (storeDescription);
+const numberOfFilms = +prompt ("Сколько фильмов ты посмотрел?", "");
 
-// alert ("hUA");
-// const result = confirm ("are you here?");
-// console.log (result);
 
-const answer = prompt ("Are you 18 years old?", "18");
-console.log (typeof(answer));
+
+    
+const personalMovieDB = {
+	count: numberOfFilms,
+	movies: {},
+	actors: {},
+	genres: [],
+	privat: false
+};
+const a = prompt ("Один из последних просмотренных фильмов", ""),
+	b = +prompt ("На сколько оцение его", ""),
+	c = prompt ("Один из последних просмотренных фильмов", ""),
+	d = +prompt ("На сколько оцение его", "");
+
+
+personalMovieDB.movies[a] = b;
+personalMovieDB.movies[c] = d;
+
+
+console.log (personalMovieDB);
+
+
