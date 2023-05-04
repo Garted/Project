@@ -1,88 +1,84 @@
-const gulp = require("gulp");
-const browserSync = require("browser-sync");
+/* eslint-disable linebreak-style */
+import { task, watch, src, dest, parallel } from "gulp";
+import browserSync, { reload, stream } from "browser-sync";
+// eslint-disable-next-line no-undef
 const sass = require("gulp-sass")(require("sass"));
-const cleanCSS = require("gulp-clean-css");
-const autoprefixer = require("gulp-autoprefixer");
-const rename = require("gulp-rename");
-const imagemin = require("gulp-imagemin");
-const htmlmin = require("gulp-htmlmin");
+import cleanCSS from "gulp-clean-css";
+import autoprefixer from "gulp-autoprefixer";
+import rename from "gulp-rename";
+import imagemin from "gulp-imagemin";
+import htmlmin from "gulp-htmlmin";
 
-gulp.task("server", function () {
-  browserSync({
-    server: {
-      baseDir: "dist",
-    },
-  });
+task("server", function () {
+	browserSync({
+		server: {
+			baseDir: "dist",
+		},
+	});
 
-  gulp.watch("src/*.html").on("change", browserSync.reload);
+	watch("src/*.html").on("change", reload);
 });
 
-gulp.task("styles", function () {
-  return gulp
-    .src("src/sass/**/*.+(scss|sass)")
-    .pipe(sass({ outputStyle: "compressed" }).on("error", sass.logError))
-    .pipe(rename({ suffix: ".min", prefix: "" }))
-    .pipe(autoprefixer())
-    .pipe(cleanCSS({ compatibility: "ie8" }))
-    .pipe(gulp.dest("dist/css"))
-    .pipe(browserSync.stream());
+task("styles", function () {
+	return src("src/sass/**/*.+(scss|sass)")
+		.pipe(sass({ outputStyle: "compressed" }).on("error", sass.logError))
+		.pipe(rename({ suffix: ".min", prefix: "" }))
+		.pipe(autoprefixer())
+		.pipe(cleanCSS({ compatibility: "ie8" }))
+		.pipe(dest("dist/css"))
+		.pipe(stream());
 });
 
-gulp.task("watch", function () {
-  gulp.watch("src/sass/**/*.+(scss|sass|css)", gulp.parallel("styles"));
-  gulp.watch("src/*.html").on("change", gulp.parallel("html"));
-  gulp.watch("src/js/**/*.js").on("change", gulp.parallel("scripts"));
-  gulp.watch("src/fonts/**/*").on("all", gulp.parallel("fonts"));
-  gulp.watch("src/icons/**/*").on("all", gulp.parallel("icons"));
-  gulp.watch("src/img/**/*").on("all", gulp.parallel("images"));
+task("watch", function () {
+	watch("src/sass/**/*.+(scss|sass|css)", parallel("styles"));
+	watch("src/*.html").on("change", parallel("html"));
+	watch("src/js/**/*.js").on("change", parallel("scripts"));
+	watch("src/fonts/**/*").on("all", parallel("fonts"));
+	watch("src/icons/**/*").on("all", parallel("icons"));
+	watch("src/img/**/*").on("all", parallel("images"));
 });
 
-gulp.task("html", function () {
-  return gulp
-    .src("src/*.html")
-    .pipe(htmlmin({ collapseWhitespace: true }))
-    .pipe(gulp.dest("dist/"));
+task("html", function () {
+	return src("src/*.html")
+		.pipe(htmlmin({ collapseWhitespace: true }))
+		.pipe(dest("dist/"));
 });
 
-gulp.task("scripts", function () {
-  return gulp
-    .src("src/js/**/*.js")
-    .pipe(gulp.dest("dist/js"))
-    .pipe(browserSync.stream());
+task("scripts", function () {
+	return src("src/js/**/*.js")
+		.pipe(dest("dist/js"))
+		.pipe(stream());
 });
 
-gulp.task("fonts", function () {
-  return gulp
-    .src("src/fonts/**/*")
-    .pipe(gulp.dest("dist/fonts"))
-    .pipe(browserSync.stream());
+task("fonts", function () {
+	return src("src/fonts/**/*")
+		.pipe(dest("dist/fonts"))
+		.pipe(stream());
 });
 
-gulp.task("icons", function () {
-  return gulp
-    .src("src/icons/**/*")
-    .pipe(gulp.dest("dist/icons"))
-    .pipe(browserSync.stream());
+task("icons", function () {
+	return src("src/icons/**/*")
+		.pipe(dest("dist/icons"))
+		.pipe(stream());
 });
 
-gulp.task("images", function () {
-  return gulp
-    .src("src/img/**/*")
-    .pipe(imagemin())
-    .pipe(gulp.dest("dist/img"))
-    .pipe(browserSync.stream());
+task("images", function () {
+	return src("src/img/**/*")
+		.pipe(imagemin())
+		.pipe(dest("dist/img"))
+		.pipe(stream());
 });
 
-gulp.task(
-  "default",
-  gulp.parallel(
-    "watch",
-    "server",
-    "styles",
-    "scripts",
-    "fonts",
-    "icons",
-    "html",
-    "images"
-  )
+task(
+	"default",
+	parallel(
+		"watch",
+		"server",
+		"styles",
+		"scripts",
+		"fonts",
+		"icons",
+		"html",
+		"images"
+	)
 );
